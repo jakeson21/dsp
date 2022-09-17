@@ -1,6 +1,7 @@
 #pragma once
 #include <complex>
 #include <string>
+#include <vector>
 
 template <typename T>
 class IIR_Bandpass
@@ -13,6 +14,8 @@ public:
     T operator()(T x);
 
     std::string to_string();
+    std::vector<double> num() const { return b; }
+    std::vector<double> den() const { return a; }
 
 protected:
     T y[3]; // {n, n-1, n-2}
@@ -23,4 +26,7 @@ protected:
     double alpha;
     double beta;
     double gain;
+
+    std::vector<double> a;
+    std::vector<double> b;
 };

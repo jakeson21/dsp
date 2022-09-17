@@ -18,6 +18,9 @@ IIR_Bandpass<T>::IIR_Bandpass(double omega, double bandwidth)
     this->beta = std::cos(omega);
     this->gain = (1.0 - this->alpha) / 2.0;
 
+    b = {this->gain, 0.0, -this->gain};
+    a = {1.0, -this->beta*(1.0 + this->alpha), this->alpha};
+
     y[0] = T(0);
     y[1] = T(0);
     y[2] = T(0);
@@ -33,6 +36,8 @@ std::string IIR_Bandpass<T>::to_string()
     ss << "alpha = " << alpha << ", ";
     ss << "beta = " << beta << ", ";
     ss << "gain = " << gain << ", ";
+    ss << "\nb = {" << b[0] << ", " << b[1] << ", " << b[2] << "}";
+    ss << "\na = {" << a[0] << ", " << a[1] << ", " << a[2] << "}";
     return ss.str();
 }
 
@@ -51,8 +56,7 @@ T IIR_Bandpass<T>::operator()(T input)
     //  2    1 - B(1+a)z^-1 + az^-2
     //
     // y[n] = G * (x[n] - x[n-2]) / ( B(1 + a)y[n-1] - ay[n-2] )
-    y[n] = this->gain * (x[n] - x[n-2]) 
-        + (this->beta * (T(1.0) + this->alpha) * y[n-1]) - this->alpha*y[n-2];
+    y[n] =  T(this->b[0])*x[n] + T(this->b[2])*x[n-2] - T(this->a[1])*y[n-1] - T(this->a[2])*y[n-2];
     return y[n];
 }
 
@@ -71,8 +75,7 @@ std::complex<float> IIR_Bandpass<std::complex<float>>::operator()(std::complex<f
     //  2    1 - B(1+a)z^-1 + az^-2
     //
     // y[n] = G * (x[n] - x[n-2]) / ( B(1 + a)y[n-1] - ay[n-2] )
-    y[n] = float(this->gain) * (x[n] - x[n-2]) 
-        + (float(this->beta) * (1.0f + float(this->alpha)*y[n-1])) - float(this->alpha)*y[n-2];
+    y[n] = float(this->b[0])*x[n] + float(this->b[2])*x[n-2] - float(this->a[1])*y[n-1] - float(this->a[2])*y[n-2];
     return y[n];
 }
 

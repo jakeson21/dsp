@@ -1,0 +1,3 @@
+[submodule "extern/SigPack"]
+	path = extern/SigPack
+	url = git@github.com:neilferg/SigPack.git
