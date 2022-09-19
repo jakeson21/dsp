@@ -9,8 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 #######################
 add_library(dsp
-    filters/iir_bandpass.cpp
-    filters/iir_bandstop.cpp
+    filters/iir_filt.cpp
 )
 
 target_include_directories(dsp PUBLIC
